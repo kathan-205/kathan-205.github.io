@@ -667,7 +667,7 @@ h1 {
 .chatbot-badge {
     position: absolute;
     top: -10px;
-    right: -120px;
+    left: -130px; 
     background: var(--bg-card);
     color: var(--text-primary);
     padding: 0.5rem 1rem;
@@ -688,11 +688,13 @@ h1 {
 }
 
 .chatbot-window {
-    position: absolute;
-    bottom: 90px;
-    right: 0;
+    position: fixed;  
+    bottom: 110px;    
+    right: 2rem;      
     width: 400px;
+    max-width: calc(100vw - 4rem); 
     height: 600px;
+    max-height: calc(100vh - 140px);  
     background: var(--bg-card);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -992,8 +994,10 @@ h1 {
     }
 
     .chatbot-window {
-        width: 90vw;
-        right: 5vw;
+        width: calc(100vw - 2rem);  
+        right: 1rem;               
+        bottom: 90px;              
+        height: 500px;             
     }
 
     .chatbot-badge {
@@ -1003,5 +1007,14 @@ h1 {
     #chatbot-container {
         bottom: 1rem;
         right: 1rem;
+    }
+    
+    .chatbot-toggle {
+        width: 60px;              
+        height: 60px;            
+    }
+    
+    .avatar-emoji {
+        font-size: 1.8rem;        
     }
 }
