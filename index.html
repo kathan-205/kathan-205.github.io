@@ -37,7 +37,19 @@
             <div class="home-content">
                 <img src="images/profile.jpg" alt="Kathan Shah" class="profile-photo">
                 <h1 id="typingText"></h1>
-                <p class="subtitle">Computing Science Student | Full-Stack Developer | Hackathon Winner 🏆</p>
+                <p class="subtitle">Computing Science Student at University of Alberta</p>
+                <div class="highlight-box">
+                    <div class="highlight-line">
+                        <span class="code-symbol">{'</span>
+                        <span class="highlight-text gradient-text">Building innovative solutions</span>
+                        <span class="code-symbol">'}</span>
+                    </div>
+                    <div class="highlight-line">
+                        <span class="code-symbol">{'</span>
+                        <span class="highlight-text gradient-text">One line of code at a time</span>
+                        <span class="code-symbol">'}</span>
+                    </div>
+                </div>
                 
                 <div class="social-links">
                     <a href="https://github.com/kathan-205" target="_blank" class="social-link" title="GitHub">
@@ -59,7 +71,7 @@
         <div class="container">
             <h2 class="page-title">About Me</h2>
             <p class="page-intro">
-                Computing Science student at the University of Alberta passionate about creating impactful software. Hackathon winner, full-stack developer, and lifelong learner exploring the intersection of technology and innovation.
+                Student with a passion for solving complex problems through code. With hands-on experience in full-stack development, database architecture, and hackathon competitions, I'm actively seeking internship opportunities where I can contribute to meaningful projects while continuing to grow as a developer.
             </p>
 
             <div class="about-content">
@@ -123,6 +135,18 @@
                         <span class="skill-tag">RESTful APIs</span>
                     </div>
                 </div>
+
+                <div class="about-card">
+                    <h3>🎯 What I'm Looking For</h3>
+                    <p style="line-height: 1.6;">I'm actively seeking <strong>2026 internship opportunities</strong> where I can:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li>Work on challenging technical problems with real-world impact</li>
+                        <li>Collaborate with experienced engineers and learn industry best practices</li>
+                        <li>Contribute to innovative projects in web development, mobile apps, or backend systems</li>
+                        <li>Gain exposure to production-level code and software development workflows</li>
+                    </ul>
+                    <p style="line-height: 1.6; margin-top: 1rem;">I bring enthusiasm, quick learning ability, and a proven track record of delivering quality code under tight deadlines (hackathon winner! 🏆). Let's build something amazing together!</p>
+                </div>
             </div>
         </div>
     </section>
@@ -130,9 +154,6 @@
     <section id="projects" class="projects-section">
         <div class="container">
             <h2 class="page-title">My Projects</h2>
-            <p class="page-intro">
-                From hackathon winners to academic challenges, each project represents a unique journey of problem-solving and innovation.
-            </p>
 
             <div class="projects-grid">
                 <div class="project-card">
@@ -194,12 +215,11 @@
         <div class="container">
             <h2 class="page-title">Let's Connect</h2>
             <p class="page-intro">
-                Have a project in mind or just want to chat? Drop me a message and I'll get back to you soon!
+                Interested in discussing internship opportunities or just want to chat about tech? Drop me a message!
             </p>
 
             <div class="contact-grid">
                 <form id="contactForm" action="https://formsubmit.co/shahkathan1010@gmail.com" method="POST">
-                    <!-- FormSubmit Configuration -->
                     <input type="hidden" name="_subject" value="New Portfolio Contact from Website!">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
@@ -216,7 +236,7 @@
 
                     <div class="form-group">
                         <label for="message">Your Message</label>
-                        <textarea id="message" name="message" required placeholder="Tell me about your project or idea..."></textarea>
+                        <textarea id="message" name="message" required placeholder="Tell me about your project or internship opportunity..."></textarea>
                     </div>
 
                     <button type="submit" class="submit-btn">Send Message ✉️</button>
@@ -226,20 +246,18 @@
                     </div>
                 </form>
 
-                <!-- QR Code Section -->
                 <div class="qr-section">
                     <div class="qr-card">
-                        <h3>📱 View in AR</h3>
-                        <p>Scan this QR code to see my portfolio in augmented reality!</p>
+                        <h3>🎮 Interactive Experience</h3>
+                        <p>Scan to play a mini-game and explore my projects in a fun way!</p>
                         <div id="qrcode"></div>
-                        <p class="qr-hint">Use your phone camera to scan</p>
+                        <p class="qr-hint">🎯 Collect coins & unlock achievements</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- AI Chatbot -->
     <div id="chatbot-container">
         <button id="chatbot-toggle" class="chatbot-toggle" aria-label="Open chatbot">
             <div class="chatbot-avatar">
@@ -255,7 +273,7 @@
                         <span class="avatar-emoji">🤖</span>
                     </div>
                     <div>
-                        <h4>Kathan's AI Assistant</h4>
+                        <h4>AI Assistant (Powered by GPT)</h4>
                         <span class="chatbot-status">● Online</span>
                     </div>
                 </div>
@@ -266,11 +284,11 @@
                 <div class="message bot-message">
                     <div class="message-avatar">🤖</div>
                     <div class="message-content">
-                        <p>👋 Hey there! I'm Kathan's AI assistant. I can tell you about his projects, skills, experience, or anything else you'd like to know!</p>
+                        <p>👋 Hey there! I'm Kathan's AI assistant powered by ChatGPT. I can answer questions about his projects, skills, education, or anything else you'd like to know!</p>
                         <div class="quick-replies">
                             <button class="quick-reply" data-message="Tell me about Kathan's best project">Best project 🏆</button>
                             <button class="quick-reply" data-message="What programming languages does Kathan know?">Tech skills 💻</button>
-                            <button class="quick-reply" data-message="How do I contact Kathan?">Contact info 📧</button>
+                            <button class="quick-reply" data-message="Is Kathan looking for internships?">Internships 💼</button>
                         </div>
                     </div>
                 </div>

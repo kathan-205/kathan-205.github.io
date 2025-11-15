@@ -78,10 +78,8 @@ themeToggle.addEventListener('click', () => {
     themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
 });
 
-// Contact form - Updated to work directly with FormSubmit
+// Contact form
 document.getElementById('contactForm').addEventListener('submit', (e) => {
-    // Let the form submit naturally to FormSubmit
-    // Show success message after a short delay
     setTimeout(() => {
         const form = document.getElementById('contactForm');
         const successMsg = document.getElementById('successMessage');
@@ -97,26 +95,39 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
     }, 100);
 });
 
-// Generate QR Code for AR experience
+// Generate QR Code for interactive game
 document.addEventListener('DOMContentLoaded', () => {
-    // For testing locally, use a placeholder URL
-    // Replace this with your actual deployed website URL
-    let arUrl = 'https://kathan-shah-portfolio.netlify.app/ar.html'; // CHANGE THIS to your actual URL
+    // Construct the game URL
+    let gameUrl = '';
     
-    // If running on a live server, use the current URL
-    if (window.location.protocol === 'https:' || window.location.hostname !== 'localhost') {
-        arUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}ar.html`;
+    // Check if we're on a deployed site or localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // For local development, use the current protocol and host
+        gameUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace('index.html', '')}game.html`;
+    } else {
+        // For deployed site, use the full URL
+        // IMPORTANT: Replace this with your actual deployed URL
+        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
+        gameUrl = baseUrl + 'game.html';
     }
     
+    console.log('QR Code URL:', gameUrl); // For debugging
+    
     // Generate QR code
-    new QRCode(document.getElementById('qrcode'), {
-        text: arUrl,
-        width: 200,
-        height: 200,
-        colorDark: '#0a0e27',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    try {
+        new QRCode(document.getElementById('qrcode'), {
+            text: gameUrl,
+            width: 200,
+            height: 200,
+            colorDark: '#0a0e27',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    } catch (error) {
+        console.error('Error generating QR code:', error);
+        // Fallback: display URL as text if QR code generation fails
+        document.getElementById('qrcode').innerHTML = `<p style="font-size: 0.8rem; word-break: break-all; color: #00f0ff;">Scan failed. Visit: ${gameUrl}</p>`;
+    }
 });
 
 // Parallax effect for mountains

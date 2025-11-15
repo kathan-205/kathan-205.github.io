@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Kathan's Portfolio Game 🎮</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: white;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            cursor: none;
+        }
+
+        .game-hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hud-item {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(15px);
+            border: 2px solid #00f0ff;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3);
+        }
+
+        .score {
+            color: #00f0ff;
+        }
+
+        .timer {
+            color: #a855f7;
+        }
+
+        #gameOver, #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        #startScreen h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #00f0ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #startScreen p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .project-info {
+            background: rgba(26, 31, 58, 0.9);
+            border: 2px solid #00f0ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .project-info h3 {
+            color: #00f0ff;
+            margin-bottom: 10px;
+        }
+
+        .project-info p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00f0ff, #a855f7);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            pointer-events: auto;
+        }
+
+        .btn:hover, .btn:active {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00f0ff;
+            color: #00f0ff;
+        }
+
+        #finalScore {
+            font-size: 3rem;
+            color: #00f0ff;
+            margin: 20px 0;
+        }
+
+        #achievements {
+            margin: 20px 0;
+        }
+
+        .achievement {
+            background: rgba(168, 85, 247, 0.2);
+            border: 2px solid #a855f7;
+            border-radius: 10px;
+            padding: 10px 20px;
+            margin: 5px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            background: rgba(26, 31, 58, 0.9);
+            border: 2px solid #a855f7;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            max-width: 500px;
+        }
+
+        .instructions h3 {
+            color: #a855f7;
+            margin-bottom: 15px;
+        }
+
+        .instructions li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            #startScreen h1 {
+                font-size: 2rem;
+            }
+
+            .hud-item {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div class="game-hud">
+        <div class="hud-item score">💰 Coins: <span id="score">0</span></div>
+        <div class="hud-item timer">⏱️ Time: <span id="timer">60</span>s</div>
+    </div>
+
+    <div id="startScreen">
+        <h1>🎮 Kathan's Portfolio Quest</h1>
+        <p>Collect coins to unlock information about my projects! Each coin reveals a new achievement.</p>
+        
+        <div class="instructions">
+            <h3>📱 How to Play:</h3>
+            <ul>
+                <li>👆 Tap or drag to move your character</li>
+                <li>💰 Collect golden coins to score points</li>
+                <li>🚀 Grab the purple project tokens for bonus points</li>
+                <li>⏱️ You have 60 seconds to collect as much as you can!</li>
+                <li>🏆 Unlock achievements by reaching score milestones</li>
+            </ul>
+        </div>
+
+        <button class="btn" onclick="startGame()">Start Game! 🚀</button>
+        <button class="btn btn-secondary" onclick="window.location.href='index.html'">View Full Portfolio</button>
+    </div>
+
+    <div id="gameOver" style="display: none;">
+        <h1>🎉 Game Over!</h1>
+        <div id="finalScore">0</div>
+        <div id="achievements"></div>
+        <div id="unlockedProjects"></div>
+        <button class="btn" onclick="restartGame()">Play Again 🔄</button>
+        <button class="btn btn-secondary" onclick="window.location.href='index.html'">Full Portfolio</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const projects = [
+            {
+                title: "🏆 Hands-Free Navigator",
+                description: "1st Place HackED 2025 - Chrome extension with head tracking",
+                threshold: 10
+            },
+            {
+                title: "📱 Feelink App",
+                description: "Location-based mood sharing with 500+ locations",
+                threshold: 25
+            },
+            {
+                title: "🗄️ Database System",
+                description: "60% faster queries with dual-database architecture",
+                threshold: 40
+            },
+            {
+                title: "🎨 Ray Tracer",
+                description: "Photorealistic 3D renderer built in C",
+                threshold: 60
+            }
+        ];
+
+        let gameState = {
+            player: { x: canvas.width / 2, y: canvas.height / 2, size: 30 },
+            coins: [],
+            projectTokens: [],
+            score: 0,
+            timeLeft: 60,
+            gameRunning: false,
+            particles: []
+        };
+
+        let touchX = null;
+        let touchY = null;
+
+        function createCoin() {
+            return {
+                x: Math.random() * (canvas.width - 40) + 20,
+                y: Math.random() * (canvas.height - 40) + 20,
+                size: 20,
+                value: 1,
+                rotation: 0
+            };
+        }
+
+        function createProjectToken() {
+            return {
+                x: Math.random() * (canvas.width - 60) + 30,
+                y: Math.random() * (canvas.height - 60) + 30,
+                size: 30,
+                value: 5,
+                rotation: 0,
+                pulse: 0
+            };
+        }
+
+        function createParticle(x, y, color) {
+            for (let i = 0; i < 8; i++) {
+                gameState.particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1,
+                    color: color
+                });
+            }
+        }
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            gameState = {
+                player: { x: canvas.width / 2, y: canvas.height / 2, size: 30 },
+                coins: [],
+                projectTokens: [],
+                score: 0,
+                timeLeft: 60,
+                gameRunning: true,
+                particles: []
+            };
+
+            for (let i = 0; i < 8; i++) {
+                gameState.coins.push(createCoin());
+            }
+            for (let i = 0; i < 3; i++) {
+                gameState.projectTokens.push(createProjectToken());
+            }
+
+            const timer = setInterval(() => {
+                if (gameState.gameRunning) {
+                    gameState.timeLeft--;
+                    document.getElementById('timer').textContent = gameState.timeLeft;
+
+                    if (gameState.timeLeft <= 0) {
+                        clearInterval(timer);
+                        endGame();
+                    }
+                }
+            }, 1000);
+
+            gameLoop();
+        }
+
+        function endGame() {
+            gameState.gameRunning = false;
+            document.getElementById('finalScore').textContent = `Score: ${gameState.score}`;
+
+            const achievementsDiv = document.getElementById('achievements');
+            achievementsDiv.innerHTML = '<h3>🏆 Achievements Unlocked:</h3>';
+
+            const achievements = [];
+            if (gameState.score >= 10) achievements.push('💡 Quick Learner');
+            if (gameState.score >= 25) achievements.push('🚀 Rising Star');
+            if (gameState.score >= 40) achievements.push('🎯 Expert Collector');
+            if (gameState.score >= 60) achievements.push('👑 Portfolio Master');
+
+            achievements.forEach(ach => {
+                const achEl = document.createElement('div');
+                achEl.className = 'achievement';
+                achEl.textContent = ach;
+                achievementsDiv.appendChild(achEl);
+            });
+
+            const unlockedDiv = document.getElementById('unlockedProjects');
+            unlockedDiv.innerHTML = '<h3>📂 Unlocked Projects:</h3>';
+
+            projects.forEach(project => {
+                if (gameState.score >= project.threshold) {
+                    const projEl = document.createElement('div');
+                    projEl.className = 'project-info';
+                    projEl.innerHTML = `<h3>${project.title}</h3><p>${project.description}</p>`;
+                    unlockedDiv.appendChild(projEl);
+                }
+            });
+
+            document.getElementById('gameOver').style.display = 'flex';
+        }
+
+        function restartGame() {
+            document.getElementById('gameOver').style.display = 'none';
+            startGame();
+        }
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            touchX = e.touches[0].clientX;
+            touchY = e.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            touchX = e.touches[0].clientX;
+            touchY = e.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchend', () => {
+            touchX = null;
+            touchY = null;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            touchX = e.clientX;
+            touchY = e.clientY;
+        });
+
+        function gameLoop() {
+            if (!gameState.gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background stars
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            for (let i = 0; i < 50; i++) {
+                const x = (i * 123) % canvas.width;
+                const y = (i * 456) % canvas.height;
+                ctx.fillRect(x, y, 2, 2);
+            }
+
+            // Move player towards touch/mouse
+            if (touchX !== null && touchY !== null) {
+                const dx = touchX - gameState.player.x;
+                const dy = touchY - gameState.player.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 5) {
+                    gameState.player.x += (dx / dist) * 8;
+                    gameState.player.y += (dy / dist) * 8;
+                }
+            }
+
+            // Draw and update coins
+            gameState.coins.forEach((coin, index) => {
+                coin.rotation += 0.1;
+
+                ctx.save();
+                ctx.translate(coin.x, coin.y);
+                ctx.rotate(coin.rotation);
+                ctx.fillStyle = '#FFD700';
+                ctx.shadowColor = '#FFD700';
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.arc(0, 0, coin.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#FFA500';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('💰', 0, 0);
+                ctx.restore();
+
+                // Collision detection
+                const dx = coin.x - gameState.player.x;
+                const dy = coin.y - gameState.player.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < gameState.player.size + coin.size) {
+                    gameState.score += coin.value;
+                    document.getElementById('score').textContent = gameState.score;
+                    createParticle(coin.x, coin.y, '#FFD700');
+                    gameState.coins.splice(index, 1);
+                    gameState.coins.push(createCoin());
+                }
+            });
+
+            // Draw and update project tokens
+            gameState.projectTokens.forEach((token, index) => {
+                token.rotation += 0.05;
+                token.pulse += 0.1;
+                const pulseSize = token.size + Math.sin(token.pulse) * 5;
+
+                ctx.save();
+                ctx.translate(token.x, token.y);
+                ctx.rotate(token.rotation);
+                ctx.fillStyle = '#a855f7';
+                ctx.shadowColor = '#a855f7';
+                ctx.shadowBlur = 30;
+                ctx.beginPath();
+                ctx.arc(0, 0, pulseSize, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🚀', 0, 0);
+                ctx.restore();
+
+                const dx = token.x - gameState.player.x;
+                const dy = token.y - gameState.player.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < gameState.player.size + token.size) {
+                    gameState.score += token.value;
+                    document.getElementById('score').textContent = gameState.score;
+                    createParticle(token.x, token.y, '#a855f7');
+                    gameState.projectTokens.splice(index, 1);
+                    gameState.projectTokens.push(createProjectToken());
+                }
+            });
+
+            // Draw and update particles
+            gameState.particles = gameState.particles.filter(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fillRect(p.x, p.y, 5, 5);
+                ctx.globalAlpha = 1;
+
+                return p.life > 0;
+            });
+
+            // Draw player
+            ctx.save();
+            ctx.translate(gameState.player.x, gameState.player.y);
+            ctx.fillStyle = '#00f0ff';
+            ctx.shadowColor = '#00f0ff';
+            ctx.shadowBlur = 25;
+            ctx.beginPath();
+            ctx.arc(0, 0, gameState.player.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('👤', 0, 0);
+            ctx.restore();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
